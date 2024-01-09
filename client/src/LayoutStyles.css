@@ -1,0 +1,82 @@
+.main{
+    padding: 10px;
+    height: 100vh;
+}
+.Layout{
+    display: flex;
+}
+.sidebar{
+    min-height: 100%;
+    width: 300px;
+    border-radius: 5px;
+    background-color: rgb(24,49,83);
+    box-shadow: 0 0 2px gray;
+    margin-right: 20px;
+    color: white;
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+}
+.menu{
+    margin-top: 50px;
+}
+.menu-item{
+    margin-top: 30px;
+}
+
+.menu-item a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+}
+.menu-item i{
+    font-size: 1.3rem;
+    margin: 0 15px   ;
+}
+
+.header{
+    height: 10vh;
+    margin-bottom: 20px;
+    box-shadow: 0 0 2px gray;
+    background-color: white;
+}
+.body{
+    height: 85vh;
+    margin-bottom: 20px;
+    box-shadow: 0 0 2px gray;
+    background-color: white;
+}
+
+.logo h6{
+    font: 1.5rem;
+    text-align: center;
+    margin: 20px 0px;
+}
+
+.active{
+    background-color: white;
+    padding: 10px;
+}
+.active a,.active i{
+    color: rgb(24,49,83);
+}
+.header-content{
+    margin: 0 15px;
+    justify-content: flex-end;
+    height: 50px;
+    cursor:pointer;
+    align-items: center;
+    display: flex;
+}
+.header-content i{
+    margin-right: 20px;
+    font-size: 1.3rem;
+}
+.header-content a{
+    text-decoration: none;
+    margin: 0 10px;
+    color: rgb(24,49,83);
+    text-transform: uppercase;
+}

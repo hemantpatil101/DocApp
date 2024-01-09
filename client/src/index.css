@@ -1,0 +1,25 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.spinner{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    background-color: rgb(159, 150, 150);
+}
+.form-btn{
+    width:250px;
+    margin-top: 30px;
+    background-color: rgb(24,49,83);
+}
+.form-btn:hover{
+    background-color: rgb(69, 95, 128);
+}
+.homepageh1{
+    color: rgb(24,49,83);
+}
