@@ -3,7 +3,8 @@ import { Form, Select, Space } from 'antd';
 import Layout from '../Components/Layout';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import { disease_info } from './Disease_Info';
+import {Spin} from 'antd';
 const Predict = () => {
     const options = [
         { label: "Itching", value: "Itching" },
@@ -143,8 +144,8 @@ const Predict = () => {
 
     const [prediction, setPrediction] = useState([]);
     const [selectedValues, setSelectedValues] = useState([]);
-
-
+    const [info, setInfo] = useState([]);
+    const [isLaoding,setIsLoading] = useState(false);
 
     const handleChange = (value) => {
         setSelectedValues(value);
@@ -159,10 +160,15 @@ const Predict = () => {
             //     symptomsString
             // })
             console.log(symptomsString);
+
+            setIsLoading(true);
+            setInfo('');
+            setPrediction('');
+
             let res = await fetch(`${process.env.REACT_APP_URL}/api/v1/user/predict`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify({
@@ -171,7 +177,10 @@ const Predict = () => {
             })
 
             res = await res.json();
+            setIsLoading(false);
             setPrediction(res?.data?.prediction);
+            console.log(prediction + "-> " + disease_info[`${prediction}`])
+            setInfo(disease_info[`${res?.data?.prediction}`]);
             /*const res = await axios.post('/api/v1/user/predict',
            {
                 symptomsString
@@ -183,7 +192,7 @@ const Predict = () => {
            })*/
 
             //setPrediction(res)
-           // console.log('This is response from Backend' + res?.data);
+            // console.log('This is response from Backend' + res?.data);
         }
         catch (error) {
             console.log(error);
@@ -197,6 +206,10 @@ const Predict = () => {
         // You can perform DOM updates here
         console.log('Prediction changed', prediction);
     }, [prediction]);
+
+    useEffect(() => {
+        console.log("Disease Info has been Updated");
+    }, [info]);
 
     return (
         <Layout>
@@ -224,18 +237,42 @@ const Predict = () => {
                             options={options}
                         />
                     </Space>
-
+                    
+                    
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5px' }}>
                         <button className="btn btn-primary form-btn" type="submit">
                             Get Suggestion
                         </button>
                     </div>
-
-                    <div style={{ marginTop: '25px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
-                        {prediction.length > 0 && (
+                    <div style={{display: 'flex',justifyContent: 'center', marginTop: '25px' }}>
+                        <Spin spinning={isLaoding}></Spin>
+                    </div>
+                    {!isLaoding && <>
+                    <h5 style={{ marginTop: '25px' }}> Disease Prediction :</h5>
+                    <div style={{ marginTop: '5px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
+                        {prediction && (
                             <p style={{ margin: '0' }}>{prediction}</p>
                         )}
                     </div>
+                    <h5 style={{ marginTop: '25px' }}> About Disease : </h5>
+                    <div style={{ marginTop: '5px', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
+                        {prediction && (
+                            <textarea
+                                style={{
+                                    width: '100%', 
+                                    minHeight: '100px',  
+                                    resize: 'vertical',  
+                                    boxSizing: 'border-box', 
+                                    margin: '10px 10px', 
+                                    border: 'none'
+                                }}
+                                value={info}
+                                readOnly
+                            />
+
+                        )}
+                    </div>
+                    </>}
                 </Form>
             </div>
         </Layout>
