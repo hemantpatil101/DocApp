@@ -3,7 +3,7 @@ import axios from 'axios'
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-
+import Layout from '../Components/Layout.js'
 const Appointments = () => {
     const { user } = useSelector((state) => state.user);
     console.log(user);
@@ -70,8 +70,11 @@ const Appointments = () => {
     
   return (
     <>
-       <h1>Your Appointments</h1>
+       <Layout>
+       <h3 style={{ textAlign: "center" }}>📅 Your Appointments</h3>
        <Table columns={columns} dataSource={appointments}/>
+       </Layout>
+       
     </>
   )
 }

@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../Components/Layout'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { DatePicker, TimePicker, message } from 'antd';
+import { DatePicker, TimePicker,message } from 'antd';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+//import TimePicker from 'react-time-picker';
 
 const BookingPage = () => {
     const params = useParams();
     const {user} = useSelector(state => state.user);
-    const [doctors,setDoctors] = useState([]);
-    const [date,setDate] = useState();
-    const [time,setTime] = useState([]);
+    const [doctors,setDoctors] = useState();
+    const [date,setDate] = useState("");
+    const [time,setTime] = useState("");
     const [isAvailable,setIsAvailable] = useState(false);
 
     const getUserData = async() => {
@@ -35,21 +36,23 @@ const BookingPage = () => {
     }
 
     const handleBooking = async() => {
-          try{
-             const res = await axios.post('/api/v1/user/book-appointment',
+      try {
+          const res = await axios.post('/api/v1/user/book-appointment',
+          {
+            doctorId: params.doctorId,
+            userId: user._id,
+            doctorInfo: doctors,
+            userInfo: user,
+            date: date,
+            time: time,
+          },
+          {
+            headers:
             {
-               doctorId:params.doctorId,
-               userId:user._id,
-               doctorInfo:doctors,
-               userInfo:user,
-               date:date,
-               time:time,
-            },
-            {headers:
-            {
-                Authorization:`Bearer ${localStorage.getItem('token')}`,
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             }
-            })
+          })
+            
             message.success(res.data.message);
           }
           catch(error)
@@ -60,6 +63,8 @@ const BookingPage = () => {
 
     const handleAvailability = async() => {
         try{
+             
+          console.log(date  + "  " + time);
             const res = await axios.post('/api/v1/user/booking-availability',
            {
               doctorId:params.doctorId,
@@ -73,6 +78,7 @@ const BookingPage = () => {
            })
            if(res.data.success)
            {
+              console.log(res);
               if(res.data.message=='Yes')
               {
                  message.success('This slot is Available');
@@ -84,7 +90,6 @@ const BookingPage = () => {
                 setIsAvailable(false);
               }
            } 
-           
          }
          catch(error)
          {
@@ -97,53 +102,56 @@ const BookingPage = () => {
     },[]);
   return (
     <Layout>
-        <h3>Booking Page</h3>
-      <div className="container m-2">
-        {doctors && (
-          <div>
-            <h4>
-              Dr.{doctors.firstName} {doctors.lastName}
-            </h4>
-            <h4>Fees : {doctors.feesPerConsultation}</h4>
-            <h4>
-              Timings : {doctors.timings && doctors.timings[0]} -{" "}
-              {doctors.timings && doctors.timings[1]}{" "}
-            </h4>
-            <div className="d-flex flex-column w-50">
-              <DatePicker
-                aria-required={"true"}
-                className="m-2"
-                format="DD-MM-YYYY"
-                onChange={(value) => {
+      <div>
+        <h3 style={{ textAlign: "center",marginTop: '25px', padding: '30px' }} >📅 Booking Page</h3>
+        <div className="container m-2" >
+          {doctors && (
+            <div style={{ textAlign: "center" }}>
+              <h5>
+                Dr.{doctors.firstName} {doctors.lastName}
+              </h5>
+              <h5>Fees : {doctors.feesPerConsultation}</h5>
+              <h5>
+                Timings : {doctors.timings && doctors.timings[0].substring(11, 16)} -{" "}
+                {doctors.timings && doctors.timings[1].substring(11, 16)}{" "}
+              </h5>
+              <div className="d-flex flex-column align-items-center" >
+                <DatePicker
+                  aria-required={"true"}
+                  className="m-2"
+                  format="DD-MM-YYYY"
+                  onChange={(value) => {
                     setIsAvailable(false);
-                  setDate(moment(value).format("DD-MM-YYYY"));
-                }}
-              />
-              <TimePicker
-                aria-required={"true"}
-                format="HH:mm"
-                className="mt-3"
-                onChange={(value) => {
+                    setDate(moment(value).format("DD-MM-YYYY"));
+                  }}
+                />
+                <TimePicker
+                  aria-required={"true"}
+                  format="HH:mm"
+                  className="mt-3"
+                  onChange={(value) => {
                     setIsAvailable(false);
-                  setTime(moment(value).format("HH:mm"));
-                }}
-              />
+                    setTime(moment(value).format("HH:mm"));
+                  }}
+                />
 
-              <button
-                className="btn btn-primary mt-2"
-                onClick={handleAvailability}
-              >
-                Check Availability
-              </button>
+                <button
+                  className="btn btn-primary mt-2"
+                  onClick={handleAvailability}
+                >
+                  Check Availability
+                </button>
 
-              {isAvailable &&
-               <button className="btn btn-dark mt-2" onClick={handleBooking}>
-               Book Now
-               </button>}
+                {isAvailable &&
+                  <button className="btn btn-dark mt-2" onClick={handleBooking}>
+                    Book Now
+                  </button>}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
+
     </Layout>
   )
 }

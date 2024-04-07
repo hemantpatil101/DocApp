@@ -4,6 +4,9 @@ const moment = require('moment');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const appointmentModel = require('../Models/appointmentModel');
+const axios = require('axios');
+
+
 
 const loginController = async(req,res) => {
     try{
@@ -37,7 +40,7 @@ const loginController = async(req,res) => {
     }
     catch(error)
     {
-        console.log(error);
+        console.log('Something went wrong'  + error);
         res.status(500).send({
             message:error.message
         })
@@ -266,6 +269,8 @@ const bookingAvailabilityController = async(req,res) => {
         const fromTime = moment(req.body.time, "HH:mm")
         .subtract(1, "hours")
         .toISOString();
+
+        console.log(req.body.date + " " + req.body.time);
        const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
        const doctorId = req.body.doctorId;
        console.log(doctorId + " " + date);
@@ -327,6 +332,40 @@ const userAppointmentController = async(req,res) => {
         })
     }
 }
+
+const userPredictorController = async(req,res) => {
+    try{
+        
+        const { symptoms } = req.body;
+        console.log(symptoms);
+        // const apiResponse = await axios.post('https://disease-predictor-ml-model.onrender.com/predict', {
+        //     symptoms
+        // });
+        let apiResponse = await fetch(`https://disease-predictor-ml-model.onrender.com/predict`,{
+            method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({
+                    "symptoms": symptoms
+                }),
+        })
+
+        apiResponse = await apiResponse.json();
+        res.status(200).send({
+          data: apiResponse
+        })
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send({
+            success:false,
+            message:'Error in Fetching Prediction Model',
+            error,
+        })
+    }
+}
 module.exports = {loginController,registerController,authController,applyDoctorController,
     getAllNotificationsController,deleteAllNotificationsController,getAllDoctorsControllers,
-    bookAppointmentController,bookingAvailabilityController,userAppointmentController };
+    bookAppointmentController,bookingAvailabilityController,userAppointmentController,userPredictorController };
