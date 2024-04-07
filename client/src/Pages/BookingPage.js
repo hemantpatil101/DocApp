@@ -17,7 +17,7 @@ const BookingPage = () => {
 
     const getUserData = async() => {
       try{
-        const res = await axios.post('/api/v1/doctor/getDoctorById',
+        const res = await axios.post(`${process.env.REACT_APP_URL}/api/v1/doctor/getDoctorById`,
         {doctorId:params.doctorId},
         {
            headers:{
@@ -37,7 +37,7 @@ const BookingPage = () => {
 
     const handleBooking = async() => {
       try {
-          const res = await axios.post('/api/v1/user/book-appointment',
+          const res = await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/book-appointment`,
           {
             doctorId: params.doctorId,
             userId: user._id,
@@ -65,7 +65,7 @@ const BookingPage = () => {
         try{
              
           console.log(date  + "  " + time);
-            const res = await axios.post('/api/v1/user/booking-availability',
+            const res = await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/booking-availability`,
            {
               doctorId:params.doctorId,
               date:date,

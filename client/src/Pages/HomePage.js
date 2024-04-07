@@ -8,7 +8,7 @@ const HomePage = () => {
     const [doctors,setDoctors] = useState([]);
     const getUserData = async() => {
       try{
-        const res = await axios.get('/api/v1/user/getAllDoctors',
+        const res = await axios.get(`${process.env.REACT_APP_URL}/api/v1/user/getAllDoctors`,
         {
            headers:{
              Authorization: `Bearer ${localStorage.getItem('token')}`,

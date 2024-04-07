@@ -12,7 +12,7 @@ const Login = () => {
   const onfinishHandler = async (values) => {
     try {
       dispatch(showLoading());
-      const { data } = await axios.post('/api/v1/user/login', values);
+      const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/login`, values);
 
       window.location.reload();
 

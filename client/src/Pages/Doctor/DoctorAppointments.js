@@ -12,7 +12,7 @@ const DoctorAppointments = () => {
     const [appointments,setAppointments] = useState([]);
     const getAppointments = async() => {
         try{
-           const res = await axios.post('/api/v1/doctor/doctor-appointments',
+           const res = await axios.post(`${process.env.REACT_URL}/api/v1/doctor/doctor-appointments`,
            {userId:user._id},
            {headers:{
                 Authorization:`Bearer ${localStorage.getItem('token')}`,

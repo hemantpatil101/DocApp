@@ -13,7 +13,7 @@ export default function ProtectedRoutes({children}){
         try{
           dispatch(showLoading());
 
-          const res =  await axios.post('/api/v1/user/getUserData',{
+          const res =  await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/getUserData`,{
              token:localStorage.getItem('token'),
           },{
             headers:{

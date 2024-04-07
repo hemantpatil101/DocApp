@@ -14,7 +14,7 @@ const Notification = () => {
     const handleDeleteAllRead = async() =>{
         try{
            dispatch(showLoading());
-           const res = await axios.post('/api/v1/user/delete-all-notifications',
+           const res = await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/delete-all-notifications`,
            {userId:user._id},
            {
               headers:{
@@ -42,7 +42,7 @@ const Notification = () => {
     const handleMarkAllRead = async() => {
         try{
            dispatch(showLoading());
-           const res = await axios.post('/api/v1/user/get-all-notifications',
+           const res = await axios.post(`${process.env.REACT_APP_URL}/api/v1/user/get-all-notifications`,
            {
               userId:user._id,
            },
